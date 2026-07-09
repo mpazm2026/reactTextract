@@ -14,14 +14,17 @@ app.use(cors())
 
 const upload = multer({
   storage: multer.memoryStorage(),
+  limits: {
+    fileSize: 1 * 1024 * 1024, // 1 MB
+  },
   fileFilter: (_req, file, cb) => {
     const isPdf = file.mimetype === 'application/pdf' || file.originalname.toLowerCase().endsWith('.pdf')
     cb(null, isPdf)
   },
 })
 
-const s3Client = new S3Client({ region: process.env.AWS_REGION ?? 'us-east-1' })
-const textractClient = new TextractClient({ region: process.env.AWS_REGION ?? 'us-east-1' })
+const s3Client = new S3Client({ region: process.env.AWS_REGION ?? 'us-east-2' })
+const textractClient = new TextractClient({ region: process.env.AWS_REGION ?? 'us-east-2' })
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
@@ -50,7 +53,24 @@ const pollDocumentAnalysis = async (jobId) => {
   }
 }
 
-app.post('/api/analyze-document', upload.single('document'), async (req, res) => {
+app.post('/api/analyze-document', (req, res, next) => {
+  upload.single('document')(req, res, (err) => {
+    if (err instanceof multer.MulterError) {
+      if (err.code === 'LIMIT_FILE_SIZE') {
+        return res.status(413).json({ error: 'File size exceeds the 1 MB limit.' })
+      }
+
+      return res.status(400).json({ error: err.message || 'File upload failed.' })
+    }
+
+    if (err) {
+      console.error('[Upload] Unknown upload error:', err)
+      return res.status(400).json({ error: 'File upload failed.' })
+    }
+
+    next()
+  })
+}, async (req, res) => {
   try {
     console.log('[Request] Received analyze-document request')
 

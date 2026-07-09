@@ -36,6 +36,12 @@ function DocumentUpload() {
       return
     }
 
+    if (file && file.size > 1 * 1024 * 1024) {
+      setSelectedFile(null)
+      setMessage('File size exceeds the 1 MB limit.')
+      return
+    }
+
     setSelectedFile(file)
     setMessage('')
   }
@@ -196,6 +202,7 @@ function DocumentUpload() {
           {selectedFile ? selectedFile.name : 'No file selected'}
         </span>
       </div>
+      <p className="mt-2 text-xs text-slate-500">Maximum file size: 1 MB. Only PDF documents are accepted.</p>
 
       <div className="mt-4 flex flex-wrap gap-3">
         <button
