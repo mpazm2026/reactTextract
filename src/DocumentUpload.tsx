@@ -230,6 +230,10 @@ function DocumentUpload() {
         </p>
       ) : null}
 
+      <p className="mt-4 text-center text-sm font-medium text-red-600">
+        Temporarily disabled due AWS Textract rates, contact me for any doubts.
+      </p>
+
       {analysisResult ? (
         <div className="mt-6 rounded-xl border border-slate-200 bg-slate-50 p-4">
           <div className="mb-4 flex flex-wrap gap-2">
