@@ -25,6 +25,7 @@ function DocumentUpload() {
   const [analysisResult, setAnalysisResult] = useState<TextractPayload | null>(null)
   const [activeView, setActiveView] = useState<'lines' | 'forms'>('lines')
   const [isLoading, setIsLoading] = useState(false)
+  const [isContactBannerVisible, setIsContactBannerVisible] = useState(true)
   const fileInputRef = useRef<HTMLInputElement | null>(null)
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -173,6 +174,36 @@ function DocumentUpload() {
             <div className="mb-4 h-14 w-14 animate-spin rounded-full border-4 border-blue-600 border-t-transparent" />
             <p className="text-lg font-semibold text-slate-800">Processing with AWS Textract</p>
             <p className="mt-2 text-sm text-slate-600">This may take a moment while we analyze your document.</p>
+          </div>
+        </div>
+      ) : null}
+
+      {isContactBannerVisible ? (
+        <div className="fixed inset-x-0 bottom-4 z-50 flex justify-center px-4">
+          <div className="flex w-full max-w-3xl items-center justify-between rounded-2xl border border-white/10 bg-slate-900/75 px-4 py-3 shadow-2xl shadow-slate-950/40 backdrop-blur-xl">
+            <div className="flex flex-1 items-center justify-center gap-3 sm:gap-5">
+              <a
+                href="https://www.linkedin.com/in/martin-paz-03a49b25/"
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-3 py-2 text-sm font-medium text-slate-100 transition hover:bg-white/20"
+              >
+                <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor" aria-hidden="true">
+                  <path d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.5 9.5h2.88V18H5.5zM10.03 9.5h2.76v1.16h.04c.38-.72 1.32-1.48 2.72-1.48 2.9 0 3.43 1.9 3.43 4.38V18h-2.88v-7.44c0-1.78-.03-4.07-2.48-4.07-2.48 0-2.86 1.94-2.86 3.94V18H10.03z" />
+                </svg>
+                <span>LinkedIn</span>
+              </a>
+            </div>
+            <button
+              type="button"
+              onClick={() => setIsContactBannerVisible(false)}
+              className="ml-3 rounded-full border border-white/10 bg-white/10 p-2 text-slate-200 transition hover:bg-white/20"
+              aria-label="Close contact banner"
+            >
+              <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 6l12 12M18 6 6 18" />
+              </svg>
+            </button>
           </div>
         </div>
       ) : null}
